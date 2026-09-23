@@ -4,7 +4,9 @@ const admin = require("firebase-admin");
 
 admin.initializeApp();
 
-const db = admin.firestore();
+function getDb() {
+  return admin.firestore();
+}
 
 exports.subscribe = onRequest({ cors: true }, async (req, res) => {
   if (req.method !== "POST") {
@@ -80,7 +82,7 @@ exports.saveReminder = onRequest({ cors: true }, async (req, res) => {
   }
 
   try {
-    await db.collection("reminders").doc(reminderId).set({
+    await getDb().collection("reminders").doc(reminderId).set({
       taskName: taskName,
       reminderDate: new Date(reminderDate),
       token: token,
@@ -107,7 +109,7 @@ exports.deleteReminder = onRequest({ cors: true }, async (req, res) => {
   }
 
   try {
-    await db.collection("reminders").doc(reminderId).delete();
+    await getDb().collection("reminders").doc(reminderId).delete();
     res.json({ success: true });
   } catch (err) {
     console.error("Delete reminder error:", err);
@@ -124,7 +126,8 @@ exports.checkReminders = onSchedule(
     var now = new Date();
 
     try {
-      var snapshot = await db
+      var firestore = getDb();
+      var snapshot = await firestore
         .collection("reminders")
         .where("sent", "==", false)
         .where("reminderDate", "<=", now)
@@ -132,7 +135,7 @@ exports.checkReminders = onSchedule(
 
       if (snapshot.empty) return;
 
-      var batch = db.batch();
+      var batch = firestore.batch();
       var sendPromises = [];
 
       snapshot.forEach(function (doc) {
