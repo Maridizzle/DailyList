@@ -14,6 +14,7 @@
       Categories.init();
       this.registerServiceWorker();
       Notifications.init();
+      Backup.init();
       this.checkLaunchAction();
     },
 

@@ -1,4 +1,4 @@
-var CACHE_NAME = 'dailylist-v1';
+var CACHE_NAME = 'dailylist-v2';
 var SHELL_FILES = [
   '/DailyList/',
   '/DailyList/index.html',
@@ -11,6 +11,7 @@ var SHELL_FILES = [
   '/DailyList/js/tasks.js',
   '/DailyList/js/categories.js',
   '/DailyList/js/notifications.js',
+  '/DailyList/js/backup.js',
   '/DailyList/icons/icon-192.png',
   '/DailyList/icons/icon-512.png'
 ];

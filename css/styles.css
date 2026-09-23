@@ -812,6 +812,43 @@ body {
   opacity: 0.3;
 }
 
+/* ===== Settings ===== */
+.settings-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px 16px;
+  box-shadow: 0 2px 8px var(--shadow);
+}
+
+.settings-heading {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.settings-desc {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.settings-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.backup-status {
+  font-size: 0.9rem;
+  color: var(--primary-dark);
+  text-align: center;
+  margin-top: 12px;
+  font-weight: 500;
+}
+
 /* ===== Utility ===== */
 .sr-only {
   position: absolute;
