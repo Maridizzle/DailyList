@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#F48FB1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>DailyList</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pikaday/css/pikaday.css">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <header class="app-header">
+    <h1 class="app-title">DailyList</h1>
+    <nav class="app-nav">
+      <button class="nav-btn active" data-view="tasks">Tasks</button>
+      <button class="nav-btn" data-view="categories">Categories</button>
+    </nav>
+  </header>
+
+  <main class="app-main">
+    <section id="view-tasks" class="view active">
+      <div class="task-list" id="task-list"></div>
+      <div class="empty-state" id="empty-tasks">
+        <p>No tasks yet. Tap + to add one.</p>
+      </div>
+    </section>
+
+    <section id="view-categories" class="view">
+      <div class="category-list" id="category-list"></div>
+      <div class="empty-state" id="empty-categories">
+        <p>No categories yet. Tap + to create one.</p>
+      </div>
+    </section>
+  </main>
+
+  <button class="fab" id="fab-add" aria-label="Add new item">+</button>
+
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal" id="modal">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modal-title"></h2>
+        <button class="modal-close" id="modal-close" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body" id="modal-body"></div>
+    </div>
+  </div>
+
+  <div class="onboarding-overlay" id="onboarding-overlay" hidden>
+    <div class="onboarding-card">
+      <div class="onboarding-icon">&#127800;</div>
+      <h2>Morning Reminders</h2>
+      <p>DailyList can send you a gentle reminder each morning at 6am to plan your day.</p>
+      <button class="btn btn-primary" id="enable-notifications">Enable Notifications</button>
+      <button class="btn btn-text" id="skip-notifications">Maybe Later</button>
+    </div>
+  </div>
+
+  <div class="petals-container" id="petals-container" aria-hidden="true"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/dexie@3/dist/dexie.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/tasks.js"></script>
+  <script src="js/categories.js"></script>
+  <script src="js/notifications.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

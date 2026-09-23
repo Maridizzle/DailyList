@@ -1,0 +1,25 @@
+{
+  "name": "DailyList",
+  "short_name": "DailyList",
+  "description": "A gentle daily task manager",
+  "start_url": "/DailyList/",
+  "scope": "/DailyList/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#F48FB1",
+  "background_color": "#FFF5F7",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
