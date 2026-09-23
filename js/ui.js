@@ -68,6 +68,11 @@
           '</div>' +
 
           '<div class="form-group">' +
+            '<label class="form-label" for="task-reminder">Remind me</label>' +
+            '<input class="form-input" type="datetime-local" id="task-reminder" value="' + (isEdit && task.reminderDate ? task.reminderDate.slice(0, 16) : '') + '">' +
+          '</div>' +
+
+          '<div class="form-group">' +
             '<label class="form-label" for="task-notes">Notes</label>' +
             '<textarea class="form-textarea" id="task-notes" placeholder="Optional notes...">' + (isEdit ? this.escapeHTML(task.notes || '') : '') + '</textarea>' +
           '</div>' +
@@ -190,6 +195,14 @@
         recurTag = '<span class="task-recurring-tag">↻ ' + (recurLabels[task.recurring] || task.recurring) + '</span>';
       }
 
+      var reminderTag = '';
+      if (task.reminderDate && !task.completed) {
+        var rd = new Date(task.reminderDate);
+        var timeStr = rd.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+        var dateStr = rd.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        reminderTag = '<span class="task-reminder-tag">🔔 ' + dateStr + ' ' + timeStr + '</span>';
+      }
+
       return (
         '<div class="task-card' + (task.completed ? ' completed-card' : '') + '" data-id="' + task.id + '">' +
           '<div class="task-header">' +
@@ -201,6 +214,7 @@
             categoryTag +
             dueTag +
             recurTag +
+            reminderTag +
           '</div>' +
         '</div>'
       );

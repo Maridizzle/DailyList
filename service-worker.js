@@ -1,4 +1,4 @@
-var CACHE_NAME = 'dailylist-v2';
+var CACHE_NAME = 'dailylist-v3';
 var SHELL_FILES = [
   '/DailyList/',
   '/DailyList/index.html',

@@ -11,20 +11,69 @@
     add: function (taskData) {
       taskData.completed = false;
       taskData.createdAt = new Date().toISOString();
-      return DB.tasks.add(taskData).then(function () {
+      return DB.tasks.add(taskData).then(function (id) {
+        if (taskData.reminderDate) {
+          Tasks.syncReminder(id, taskData.title, taskData.reminderDate);
+        }
         Tasks.renderList();
       });
     },
 
     update: function (id, taskData) {
       return DB.tasks.update(id, taskData).then(function () {
+        if (taskData.reminderDate) {
+          Tasks.syncReminder(id, taskData.title, taskData.reminderDate);
+        } else {
+          Tasks.removeReminder(id);
+        }
         Tasks.renderList();
       });
     },
 
     remove: function (id) {
+      Tasks.removeReminder(id);
       return DB.tasks.delete(id).then(function () {
         Tasks.renderList();
+      });
+    },
+
+    getToken: function () {
+      try {
+        return localStorage.getItem('dailylist-fcm-token') || '';
+      } catch (e) {
+        return '';
+      }
+    },
+
+    syncReminder: function (taskId, taskName, reminderDate) {
+      var token = this.getToken();
+      if (!token || !SAVE_REMINDER_URL) return;
+
+      var reminderId = 'task-' + taskId;
+      fetch(SAVE_REMINDER_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          reminderId: reminderId,
+          taskName: taskName,
+          reminderDate: reminderDate,
+          token: token
+        })
+      }).catch(function (err) {
+        console.warn('Sync reminder error:', err);
+      });
+    },
+
+    removeReminder: function (taskId) {
+      if (!DELETE_REMINDER_URL) return;
+
+      var reminderId = 'task-' + taskId;
+      fetch(DELETE_REMINDER_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ reminderId: reminderId })
+      }).catch(function (err) {
+        console.warn('Delete reminder error:', err);
       });
     },
 
@@ -215,13 +264,15 @@
 
         var selected = document.querySelector('.priority-option.selected');
         var catVal = document.getElementById('task-category').value;
+        var reminderVal = document.getElementById('task-reminder').value;
         var taskData = {
           title: document.getElementById('task-name').value.trim(),
           categoryId: catVal ? Number(catVal) : null,
           priority: selected ? selected.dataset.priority : 'later',
           dueDate: document.getElementById('task-due').value || null,
           recurring: document.getElementById('task-recurring').value || '',
-          notes: document.getElementById('task-notes').value.trim()
+          notes: document.getElementById('task-notes').value.trim(),
+          reminderDate: reminderVal ? new Date(reminderVal).toISOString() : null
         };
 
         if (!taskData.title) return;

@@ -335,6 +335,11 @@ body {
   opacity: 0.8;
 }
 
+.task-reminder-tag {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
 /* ===== Category cards ===== */
 .category-list {
   display: flex;

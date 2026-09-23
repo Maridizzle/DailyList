@@ -10,3 +10,5 @@ var firebaseConfig = {
 var VAPID_KEY = "BPfaK9-xJVO_WwrGjelAg0JGAjBdX04RM50wbV2NUBJDeVxAs52hMIUeli13TLprwgC75UhNkMoHxw6jC0tYa6s";
 
 var SUBSCRIBE_URL = "https://us-central1-daily-list-2c6be.cloudfunctions.net/subscribe";
+var SAVE_REMINDER_URL = "https://us-central1-daily-list-2c6be.cloudfunctions.net/saveReminder";
+var DELETE_REMINDER_URL = "https://us-central1-daily-list-2c6be.cloudfunctions.net/deleteReminder";
