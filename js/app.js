@@ -12,6 +12,8 @@
       this.showView('tasks');
       Tasks.init();
       Categories.init();
+      this.registerServiceWorker();
+      Notifications.init();
       this.checkLaunchAction();
     },
 
