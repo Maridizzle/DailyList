@@ -93,11 +93,11 @@
           serviceWorkerRegistration: registration
         }).then(function (token) {
           if (token) {
-            console.log('FCM Token (use this for your 6am cron):');
-            console.log(token);
+            console.log('FCM token registered');
             try {
               localStorage.setItem('dailylist-fcm-token', token);
             } catch (e) {}
+            Notifications.subscribeToMorning(token);
           }
         }).catch(function (err) {
           console.warn('FCM token error:', err);
@@ -122,6 +122,26 @@
             });
           });
         }
+      });
+    }
+  };
+
+    subscribeToMorning: function (token) {
+      if (!SUBSCRIBE_URL) {
+        console.log('SUBSCRIBE_URL not set. Set it in firebase-config.js after deploying Cloud Functions.');
+        return;
+      }
+
+      fetch(SUBSCRIBE_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: token })
+      }).then(function (res) {
+        if (res.ok) {
+          console.log('Subscribed to morning reminders');
+        }
+      }).catch(function (err) {
+        console.warn('Subscribe error:', err);
       });
     }
   };
