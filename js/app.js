@@ -64,15 +64,16 @@
 
     initPetals: function () {
       var container = document.getElementById('petals-container');
-      var count = 6;
+      var count = 8;
 
       for (var i = 0; i < count; i++) {
         var petal = document.createElement('div');
         petal.classList.add('petal');
-        petal.style.left = Math.random() * 100 + '%';
-        petal.style.animationDuration = (10 + Math.random() * 15) + 's';
-        petal.style.animationDelay = (Math.random() * 12) + 's';
-        var size = (8 + Math.random() * 8) + 'px';
+        petal.classList.add(i % 2 === 0 ? 'drift-a' : 'drift-b');
+        petal.style.left = (5 + Math.random() * 90) + '%';
+        petal.style.animationDuration = (12 + Math.random() * 18) + 's';
+        petal.style.animationDelay = (Math.random() * 15) + 's';
+        var size = (6 + Math.random() * 10) + 'px';
         petal.style.width = size;
         petal.style.height = size;
         container.appendChild(petal);

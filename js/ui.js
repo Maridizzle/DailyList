@@ -145,18 +145,33 @@
       }
     },
 
+    formatDueDate: function (dateStr) {
+      var due = new Date(dateStr + 'T00:00:00');
+      var today = new Date();
+      today.setHours(0, 0, 0, 0);
+      var diff = Math.round((due - today) / 86400000);
+
+      if (diff === 0) return 'Today';
+      if (diff === 1) return 'Tomorrow';
+      if (diff === -1) return 'Yesterday';
+      if (diff > 1 && diff <= 6) {
+        return due.toLocaleDateString('en-US', { weekday: 'long' });
+      }
+      return due.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    },
+
     renderTaskCard: function (task, category) {
       var priorityMap = {
-        urgent:  { kanji: '急',                label: 'Urgent',  cls: 'priority-urgent' },
-        later:   { kanji: '後で',          label: 'Later',   cls: 'priority-later' },
-        someday: { kanji: 'いつか',    label: 'Someday', cls: 'priority-someday' }
+        urgent:  { kanji: '急',             label: 'Urgent',  cls: 'priority-urgent' },
+        later:   { kanji: '後で',       label: 'Later',   cls: 'priority-later' },
+        someday: { kanji: 'いつか',  label: 'Someday', cls: 'priority-someday' }
       };
 
       var p = priorityMap[task.priority] || priorityMap.someday;
 
       var today = new Date();
       today.setHours(0, 0, 0, 0);
-      var isOverdue = task.dueDate && new Date(task.dueDate) < today && !task.completed;
+      var isOverdue = task.dueDate && new Date(task.dueDate + 'T00:00:00') < today && !task.completed;
 
       var categoryTag = '';
       if (category) {
@@ -165,11 +180,18 @@
 
       var dueTag = '';
       if (task.dueDate) {
-        dueTag = '<span class="task-due' + (isOverdue ? ' overdue' : '') + '">' + task.dueDate + '</span>';
+        var label = this.formatDueDate(task.dueDate);
+        dueTag = '<span class="task-due' + (isOverdue ? ' overdue' : '') + '">' + label + '</span>';
+      }
+
+      var recurTag = '';
+      if (task.recurring) {
+        var recurLabels = { daily: 'Daily', weekly: 'Weekly', biweekly: 'Biweekly', monthly: 'Monthly', yearly: 'Yearly' };
+        recurTag = '<span class="task-recurring-tag">↻ ' + (recurLabels[task.recurring] || task.recurring) + '</span>';
       }
 
       return (
-        '<div class="task-card" data-id="' + task.id + '">' +
+        '<div class="task-card' + (task.completed ? ' completed-card' : '') + '" data-id="' + task.id + '">' +
           '<div class="task-header">' +
             '<button class="task-checkbox' + (task.completed ? ' checked' : '') + '" data-id="' + task.id + '" aria-label="Toggle complete"></button>' +
             '<span class="task-title' + (task.completed ? ' completed' : '') + '">' + this.escapeHTML(task.title) + '</span>' +
@@ -178,6 +200,7 @@
             '<span class="task-priority ' + p.cls + '">' + p.kanji + ' ' + p.label + '</span>' +
             categoryTag +
             dueTag +
+            recurTag +
           '</div>' +
         '</div>'
       );
