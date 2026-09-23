@@ -1,3 +1,74 @@
+var CACHE_NAME = 'dailylist-v1';
+var SHELL_FILES = [
+  '/DailyList/',
+  '/DailyList/index.html',
+  '/DailyList/manifest.json',
+  '/DailyList/firebase-config.js',
+  '/DailyList/css/styles.css',
+  '/DailyList/js/app.js',
+  '/DailyList/js/db.js',
+  '/DailyList/js/ui.js',
+  '/DailyList/js/tasks.js',
+  '/DailyList/js/categories.js',
+  '/DailyList/js/notifications.js',
+  '/DailyList/icons/icon-192.png',
+  '/DailyList/icons/icon-512.png'
+];
+
+self.addEventListener('install', function (event) {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(function (cache) {
+      return cache.addAll(SHELL_FILES);
+    }).then(function () {
+      return self.skipWaiting();
+    })
+  );
+});
+
+self.addEventListener('activate', function (event) {
+  event.waitUntil(
+    caches.keys().then(function (names) {
+      return Promise.all(
+        names.filter(function (name) {
+          return name !== CACHE_NAME;
+        }).map(function (name) {
+          return caches.delete(name);
+        })
+      );
+    }).then(function () {
+      return self.clients.claim();
+    })
+  );
+});
+
+self.addEventListener('fetch', function (event) {
+  var url = new URL(event.request.url);
+
+  if (url.origin === 'https://www.gstatic.com' ||
+      url.origin === 'https://cdn.jsdelivr.net' ||
+      url.origin === 'https://fonts.googleapis.com' ||
+      url.origin === 'https://fonts.gstatic.com') {
+    event.respondWith(
+      caches.open(CACHE_NAME).then(function (cache) {
+        return cache.match(event.request).then(function (cached) {
+          if (cached) return cached;
+          return fetch(event.request).then(function (response) {
+            cache.put(event.request, response.clone());
+            return response;
+          });
+        });
+      })
+    );
+    return;
+  }
+
+  event.respondWith(
+    caches.match(event.request).then(function (cached) {
+      return cached || fetch(event.request);
+    })
+  );
+});
+
 importScripts('https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging-compat.js');
 
@@ -23,8 +94,8 @@ messaging.onBackgroundMessage(function (payload) {
 
   return self.registration.showNotification(title, {
     body: body,
-    icon: 'icons/icon-192.png',
-    badge: 'icons/icon-192.png',
+    icon: '/DailyList/icons/icon-192.png',
+    badge: '/DailyList/icons/icon-192.png',
     actions: [
       { action: 'add-task', title: 'Add Task' }
     ],

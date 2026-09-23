@@ -123,8 +123,7 @@
           });
         }
       });
-    }
-  };
+    },
 
     subscribeToMorning: function (token) {
       if (!SUBSCRIBE_URL) {
