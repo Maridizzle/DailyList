@@ -9,8 +9,10 @@
       this.bindFAB();
       this.bindModal();
       this.initPetals();
-      this.checkLaunchAction();
       this.showView('tasks');
+      Tasks.init();
+      Categories.init();
+      this.checkLaunchAction();
     },
 
     bindNav: function () {
@@ -38,9 +40,9 @@
       var self = this;
       document.getElementById('fab-add').addEventListener('click', function () {
         if (self.currentView === 'tasks') {
-          UI.openTaskModal();
+          Tasks.openAddModal();
         } else if (self.currentView === 'categories') {
-          UI.openCategoryModal();
+          Categories.openAddModal();
         }
       });
     },
@@ -80,7 +82,7 @@
     checkLaunchAction: function () {
       var params = new URLSearchParams(window.location.search);
       if (params.get('action') === 'add-task') {
-        UI.openTaskModal();
+        Tasks.openAddModal();
         window.history.replaceState({}, '', window.location.pathname);
       }
     },
